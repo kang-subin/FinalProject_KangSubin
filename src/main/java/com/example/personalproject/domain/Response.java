@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class Response<T> {
+public class Response <T> {
 
     private String resultCode;
     private T result;
