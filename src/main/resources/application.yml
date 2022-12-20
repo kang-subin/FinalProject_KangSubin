@@ -13,3 +13,6 @@ spring:
     username: root
     password:
 
+jwt:
+  token:
+    secret: hello

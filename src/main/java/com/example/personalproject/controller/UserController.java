@@ -1,11 +1,12 @@
 package com.example.personalproject.controller;
 
 import com.example.personalproject.domain.Response;
-import com.example.personalproject.domain.UserRequest;
-import com.example.personalproject.domain.UserResponse;
+import com.example.personalproject.domain.dto.UserJoinRequest;
+import com.example.personalproject.domain.dto.UserJoinResponse;
+import com.example.personalproject.domain.dto.UserLoginRequest;
+import com.example.personalproject.domain.dto.UserLoginResponse;
 import com.example.personalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +20,15 @@ public class UserController {
     private final UserService userservice;
 
     @PostMapping("/join")
-    public Response<UserResponse> join (Response response, @RequestBody UserRequest userRequest){
-        UserResponse userResponse = userservice.join(userRequest);
-        return response.success(userResponse);
+    public Response<UserJoinResponse> join (Response response, @RequestBody UserJoinRequest userJoinRequest){
+        UserJoinResponse userJoinResponse = userservice.join(userJoinRequest);
+        return response.success(userJoinResponse);
     }
 
+    @PostMapping("/login")
+    public String login(@RequestBody UserLoginRequest userLoginRequest){
+        UserLoginResponse userLoginResponse = userservice.login(userLoginRequest);
+        String jwt = userLoginResponse.getToken();
+        return jwt;
+    }
 }

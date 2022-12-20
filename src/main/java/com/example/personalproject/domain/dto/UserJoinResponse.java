@@ -1,4 +1,4 @@
-package com.example.personalproject.domain;
+package com.example.personalproject.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
-public class UserResponse {
+public class UserJoinResponse {
     private Long userId;
     private String userName;
 
