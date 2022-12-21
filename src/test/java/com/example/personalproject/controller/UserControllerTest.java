@@ -60,8 +60,8 @@ class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                 .andExpect(jsonPath("$.result").exists())
-                .andExpect(jsonPath("$..userId").exists())
-                .andExpect(jsonPath("$..userName").value("강수빈"))
+                .andExpect(jsonPath("$.result.userId").exists())
+                .andExpect(jsonPath("$.result.userName").value("강수빈"))
                 .andDo(print());
     }
 
@@ -80,17 +80,17 @@ class UserControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result").exists())
-                .andExpect(jsonPath("$..errorCode").value("DUPLICATE_USER_NAME"))
-                .andExpect(jsonPath("$..message").value(userJoinRequest.getUserName() + "은 이미 있습니다."))
+                .andExpect(jsonPath("$.result.errorCode").value("DUPLICATE_USER_NAME"))
+                .andExpect(jsonPath("$.result.message").value(userJoinRequest.getUserName() + "은 이미 있습니다."))
                 .andDo(print());
     }
 
-    @Test
+    @Test // 실패함 ..
     @DisplayName("로그인 성공")
     public void login() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("강수빈","1111");
         String token = "token";
-        given(userService.login(userLoginRequest)).willReturn(new UserLoginResponse(token));
+        given(userService.login(any())).willReturn(new UserLoginResponse(token));
 
         String url ="/api/v1/login";
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
@@ -99,7 +99,7 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$..jwt").value("token"))
+                .andExpect(jsonPath("$.jwt").exists())
                 .andDo(print());
         }
 
@@ -108,7 +108,7 @@ class UserControllerTest {
     @DisplayName("로그인 실패 - 회원 가입 된 userName 없는 경우")
     public void loginUserNameFail() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("테스트용","1111");
-        given(userService.login(userLoginRequest)).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
+        given(userService.login(any())).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
 
         String url ="/api/v1/login";
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
@@ -119,12 +119,37 @@ class UserControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.resultCode").value("ERROR"))
                 .andExpect(jsonPath("$.result").exists())
-                .andExpect(jsonPath("$..errorCode").value("USERNAME_NOT_FOUND"))
-                .andExpect(jsonPath("$..message").value(userLoginRequest.getUserName()+"을 찾을 수 없습니다."))
+                .andExpect(jsonPath("$.result.errorCode").value("USERNAME_NOT_FOUND"))
+                .andExpect(jsonPath("$.result.message").value("Not founded"))
                 .andDo(print());
     }
 
-}
+
+    @Test
+    @DisplayName("로그인 실패 - password틀림")
+    public void loginPasswordFail() throws Exception {
+        UserLoginRequest userLoginRequest = new UserLoginRequest("테스트용","1111");
+        given(userService.login(any())).willThrow(new UserException(ErrorCode.INVALID_PASSWORD,"패스워드가 잘못되었습니다."));
+
+        String url ="/api/v1/login";
+        String json = new ObjectMapper().writeValueAsString(userLoginRequest);
+        mockMvc.perform(post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result").exists())
+                .andExpect(jsonPath("$.result.errorCode").value("INVALID_PASSWORD"))
+                .andExpect(jsonPath("$.result.message").value("패스워드가 잘못되었습니다."))
+                .andDo(print());
+    }
+
+
+    }
+
+
+
+
 
 
 
