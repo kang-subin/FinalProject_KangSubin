@@ -47,7 +47,7 @@ public class UserService {
 
         Optional<User> users = userRepository.findByUserName(userLoginRequest.getUserName());
 
-        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND,"패스워드가 잘못되었습니다.");
+        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded");
 
         if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD,"패스워드가 잘못되었습니다.");
 

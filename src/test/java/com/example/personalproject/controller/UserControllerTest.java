@@ -69,7 +69,7 @@ class UserControllerTest {
     @DisplayName("회원가입 실패 - userName 중복인 경우")
     public void joinFail () throws Exception {
         UserJoinRequest userJoinRequest = new UserJoinRequest("강수빈", "1111");
-        given(userService.join(any())).willThrow(new UserException(ErrorCode.DUPLICATE_USER_NAME));
+        given(userService.join(any())).willThrow(new UserException(ErrorCode.DUPLICATE_USER_NAME,userJoinRequest.getUserName()+"은 이미 있습니다."));
 
         String url = "/api/v1/join";
         String json = new ObjectMapper().writeValueAsString(userJoinRequest);
@@ -108,7 +108,7 @@ class UserControllerTest {
     @DisplayName("로그인 실패 - 회원 가입 된 userName 없는 경우")
     public void loginUserNameFail() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("테스트용","1111");
-        given(userService.login(userLoginRequest)).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
+        given(userService.login(userLoginRequest)).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
 
         String url ="/api/v1/login";
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
