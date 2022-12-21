@@ -69,8 +69,7 @@ class UserControllerTest {
     @DisplayName("회원가입 실패 - userName 중복인 경우")
     public void joinFail () throws Exception {
         UserJoinRequest userJoinRequest = new UserJoinRequest("강수빈", "1111");
-        UserJoinResponse userJoinResponse = new UserJoinResponse(1L, userJoinRequest.getUserName());
-        given(userService.join(any())).willThrow(new UserException(ErrorCode.DUPLICATE_USER_NAME, userJoinRequest.getUserName() + "은 이미 있습니다."));
+        given(userService.join(any())).willThrow(new UserException(ErrorCode.DUPLICATE_USER_NAME));
 
         String url = "/api/v1/join";
         String json = new ObjectMapper().writeValueAsString(userJoinRequest);
@@ -91,8 +90,7 @@ class UserControllerTest {
     public void login() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("강수빈","1111");
         String token = "token";
-        UserLoginResponse userLoginResponse =  new UserLoginResponse(token);
-        given(userService.login(userLoginRequest)).willReturn(userLoginResponse);
+        given(userService.login(userLoginRequest)).willReturn(new UserLoginResponse(token));
 
         String url ="/api/v1/login";
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
@@ -101,11 +99,35 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$..jwt").value("token"))
                 .andDo(print());
         }
 
 
+    @Test
+    @DisplayName("로그인 실패 - 회원 가입 된 userName 없는 경우")
+    public void loginUserNameFail() throws Exception {
+        UserLoginRequest userLoginRequest = new UserLoginRequest("테스트용","1111");
+        given(userService.login(userLoginRequest)).willThrow(new UserException(ErrorCode.USERNAME_NOT_FOUND));
 
+        String url ="/api/v1/login";
+        String json = new ObjectMapper().writeValueAsString(userLoginRequest);
+
+        mockMvc.perform(post(url)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                .andExpect(jsonPath("$.result").exists())
+                .andExpect(jsonPath("$..errorCode").value("USERNAME_NOT_FOUND"))
+                .andExpect(jsonPath("$..message").value(userLoginRequest.getUserName()+"을 찾을 수 없습니다."))
+                .andDo(print());
     }
+
+}
+
+
+
+
 
 

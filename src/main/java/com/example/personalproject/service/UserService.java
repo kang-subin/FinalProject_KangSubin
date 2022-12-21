@@ -28,7 +28,7 @@ public class UserService {
 
     public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         Optional<User> users = userRepository.findByUserName(userJoinRequest.getUserName());
-        if (users.isPresent()) throw new UserException(ErrorCode.DUPLICATE_USER_NAME, userJoinRequest.getUserName()+"은 이미 있습니다.");
+        if (users.isPresent())  throw new UserException(ErrorCode.DUPLICATE_USER_NAME,userJoinRequest.getUserName()+"은 이미 있습니다.");
 
         User user = User.builder()
                 .userName(userJoinRequest.getUserName())
@@ -47,9 +47,9 @@ public class UserService {
 
         Optional<User> users = userRepository.findByUserName(userLoginRequest.getUserName());
 
-        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND, "");
+        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND,"패스워드가 잘못되었습니다.");
 
-        if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD,"");
+        if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD,"패스워드가 잘못되었습니다.");
 
         String token = JwtTokenUtil.createToken(secretkey, expireTime);
         return new UserLoginResponse(token);

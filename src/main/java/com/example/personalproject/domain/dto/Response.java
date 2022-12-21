@@ -15,17 +15,17 @@ public class Response <T> {
     private String resultCode;
     private T result;
 
-    public Response success(UserJoinResponse userJoinResponse) {
+
+
+    public static Response success(UserJoinResponse userJoinResponse) {
         return Response.builder()
                 .resultCode("SUCCESS")
                 .result(userJoinResponse)
                 .build();
     }
 
-    public Response error(T t) {
-        return Response.builder()
-                .resultCode("ERROR")
-                .result(t)
-                .build();
+    public static <T> Response <T> error(String resultCode, T result) {
+
+        return new Response(resultCode,result);
     }
 }
