@@ -17,10 +17,10 @@ public class Response <T> {
 
 
 
-    public static Response success(UserJoinResponse userJoinResponse) {
+    public Response success( T result) {
         return Response.builder()
                 .resultCode("SUCCESS")
-                .result(userJoinResponse)
+                .result(result)
                 .build();
     }
 

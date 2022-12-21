@@ -99,7 +99,9 @@ class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.jwt").exists())
+                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+                .andExpect(jsonPath("$.result").exists())
+                .andExpect(jsonPath("$.result.jwt").exists())
                 .andDo(print());
         }
 
