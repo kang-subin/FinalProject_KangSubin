@@ -1,10 +1,10 @@
 package com.example.personalproject.controller;
 
-import com.example.personalproject.domain.Response;
-import com.example.personalproject.domain.dto.UserJoinRequest;
-import com.example.personalproject.domain.dto.UserJoinResponse;
-import com.example.personalproject.domain.dto.UserLoginRequest;
-import com.example.personalproject.domain.dto.UserLoginResponse;
+import com.example.personalproject.domain.dto.Response;
+import com.example.personalproject.domain.request.UserJoinRequest;
+import com.example.personalproject.domain.response.UserJoinResponse;
+import com.example.personalproject.domain.request.UserLoginRequest;
+import com.example.personalproject.domain.response.UserLoginResponse;
 import com.example.personalproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

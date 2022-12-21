@@ -1,8 +1,10 @@
-package com.example.personalproject.domain.dto;
+package com.example.personalproject.domain.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class UserJoinRequest {
 
     private String userName;

@@ -1,7 +1,6 @@
-package com.example.personalproject.domain;
+package com.example.personalproject.domain.dto;
 
-import com.example.personalproject.domain.dto.UserJoinResponse;
-import com.example.personalproject.domain.dto.UserLoginResponse;
+import com.example.personalproject.domain.response.UserJoinResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,4 +22,10 @@ public class Response <T> {
                 .build();
     }
 
+    public Response error(T t) {
+        return Response.builder()
+                .resultCode("ERROR")
+                .result(t)
+                .build();
+    }
 }

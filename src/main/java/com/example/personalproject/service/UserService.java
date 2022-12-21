@@ -1,11 +1,11 @@
 package com.example.personalproject.service;
 
 import com.example.personalproject.JwtTokenUtil.JwtTokenUtil;
-import com.example.personalproject.domain.User;
-import com.example.personalproject.domain.dto.UserJoinRequest;
-import com.example.personalproject.domain.dto.UserJoinResponse;
-import com.example.personalproject.domain.dto.UserLoginRequest;
-import com.example.personalproject.domain.dto.UserLoginResponse;
+import com.example.personalproject.domain.entity.User;
+import com.example.personalproject.domain.request.UserJoinRequest;
+import com.example.personalproject.domain.response.UserJoinResponse;
+import com.example.personalproject.domain.request.UserLoginRequest;
+import com.example.personalproject.domain.response.UserLoginResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.repository.UserRepository;
@@ -28,7 +28,7 @@ public class UserService {
 
     public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         Optional<User> users = userRepository.findByUserName(userJoinRequest.getUserName());
-        if (users.isPresent()) throw new UserException(ErrorCode.DUPLICATE_USER_NAME);
+        if (users.isPresent()) throw new UserException(ErrorCode.DUPLICATE_USER_NAME, userJoinRequest.getUserName()+"은 이미 있습니다.");
 
         User user = User.builder()
                 .userName(userJoinRequest.getUserName())
@@ -47,9 +47,9 @@ public class UserService {
 
         Optional<User> users = userRepository.findByUserName(userLoginRequest.getUserName());
 
-        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND);
+        if (users.isEmpty()) throw new UserException(ErrorCode.USERNAME_NOT_FOUND, "");
 
-        if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD);
+        if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD,"");
 
         String token = JwtTokenUtil.createToken(secretkey, expireTime);
         return new UserLoginResponse(token);
