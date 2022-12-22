@@ -9,13 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
 public class PostController {
-
     private final PostService postService;
-
-    @PostMapping("/posts")
+    @PostMapping("")
     public Response<UserPostResponse> write (@RequestBody UserPostRequest userPostRequest){
         PostDto postDto = postService.write(userPostRequest);
         return Response.success(new UserPostResponse("포스트 등록 완료", postDto.getId()));
