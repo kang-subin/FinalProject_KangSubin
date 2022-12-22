@@ -1,6 +1,7 @@
 package com.example.personalproject.service;
 
 import com.example.personalproject.JwtTokenUtil.JwtTokenUtil;
+import com.example.personalproject.domain.dto.UserDto;
 import com.example.personalproject.domain.entity.User;
 import com.example.personalproject.domain.request.UserJoinRequest;
 import com.example.personalproject.domain.response.UserJoinResponse;
@@ -26,7 +27,7 @@ public class UserService {
 
     private Long expireTime = 10000 * 60 * 60L;
 
-    public UserJoinResponse join(UserJoinRequest userJoinRequest) {
+    public UserDto join(UserJoinRequest userJoinRequest) {
         Optional<User> users = userRepository.findByUserName(userJoinRequest.getUserName());
         if (users.isPresent())  throw new UserException(ErrorCode.DUPLICATE_USER_NAME,userJoinRequest.getUserName()+"은 이미 있습니다.");
 
@@ -37,13 +38,14 @@ public class UserService {
 
         User saved = userRepository.save(user);
 
-        return UserJoinResponse.builder()
+        return UserDto.builder()
                 .userId(saved.getId())
                 .userName(saved.getUserName())
+                .password(saved.getPassword())
                 .build();
     }
 
-    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+    public String login(UserLoginRequest userLoginRequest) {
 
         Optional<User> users = userRepository.findByUserName(userLoginRequest.getUserName());
 
@@ -52,6 +54,6 @@ public class UserService {
         if(!(users.get().getPassword().equals(userLoginRequest.getPassword()))) throw new UserException(ErrorCode.INVALID_PASSWORD,"패스워드가 잘못되었습니다.");
 
         String token = JwtTokenUtil.createToken(secretkey, expireTime);
-        return new UserLoginResponse(token);
+        return token;
     }
 }

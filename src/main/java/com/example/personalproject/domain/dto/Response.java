@@ -1,14 +1,13 @@
 package com.example.personalproject.domain.dto;
 
 import com.example.personalproject.domain.response.UserJoinResponse;
+import com.example.personalproject.domain.response.UserLoginResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Getter
 public class Response <T> {
 
@@ -16,13 +15,10 @@ public class Response <T> {
     private T result;
 
 
-
-    public Response success( T result) {
-        return Response.builder()
-                .resultCode("SUCCESS")
-                .result(result)
-                .build();
+    public static <T> Response <T> success(T result) {
+        return new Response<>("SUCCESS", result);
     }
+
 
     public static <T> Response <T> error(String resultCode, T result) {
 

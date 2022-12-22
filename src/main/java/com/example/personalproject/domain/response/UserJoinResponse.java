@@ -4,8 +4,7 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@Data
+@Getter
 public class UserJoinResponse {
     private Long userId;
     private String userName;
