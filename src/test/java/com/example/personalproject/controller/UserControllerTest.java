@@ -4,12 +4,9 @@ import com.example.personalproject.domain.dto.Response;
 import com.example.personalproject.domain.dto.UserDto;
 import com.example.personalproject.domain.request.UserJoinRequest;
 import com.example.personalproject.domain.request.UserLoginRequest;
-import com.example.personalproject.domain.response.UserJoinResponse;
-import com.example.personalproject.domain.response.UserLoginResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 
@@ -25,7 +23,7 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willReturn;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -44,6 +42,7 @@ class UserControllerTest {
     Response response;
 
     @Test
+    @WithMockUser
     @DisplayName("회원가입 성공")
     public void join() throws Exception {
 
@@ -56,6 +55,7 @@ class UserControllerTest {
         String json = new ObjectMapper().writeValueAsString(userJoinRequest);
 
         mockMvc.perform(post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -67,6 +67,7 @@ class UserControllerTest {
     }
 
     @Test
+    @WithMockUser
     @DisplayName("회원가입 실패 - userName 중복인 경우")
     public void joinFail () throws Exception {
         UserJoinRequest userJoinRequest = new UserJoinRequest("강수빈", "1234");
@@ -76,6 +77,7 @@ class UserControllerTest {
         String json = new ObjectMapper().writeValueAsString(userJoinRequest);
 
         mockMvc.perform(post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isConflict())
@@ -87,6 +89,7 @@ class UserControllerTest {
     }
 
     @Test // 실패함 ..
+    @WithMockUser
     @DisplayName("로그인 성공")
     public void login() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("강수빈","1234");
@@ -97,6 +100,7 @@ class UserControllerTest {
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
 
         mockMvc.perform(post(url)
+                        .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk())
@@ -108,6 +112,7 @@ class UserControllerTest {
 
 
     @Test
+    @WithMockUser
     @DisplayName("로그인 실패 - 회원 가입 된 userName 없는 경우")
     public void loginUserNameFail() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("테스트","1234");
@@ -117,6 +122,7 @@ class UserControllerTest {
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
 
         mockMvc.perform(post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isNotFound())
@@ -129,6 +135,7 @@ class UserControllerTest {
 
 
     @Test
+    @WithMockUser
     @DisplayName("로그인 실패 - password틀림")
     public void loginPasswordFail() throws Exception {
         UserLoginRequest userLoginRequest = new UserLoginRequest("강수빈","1111");
@@ -137,6 +144,7 @@ class UserControllerTest {
         String url ="/api/v1/users/login";
         String json = new ObjectMapper().writeValueAsString(userLoginRequest);
         mockMvc.perform(post(url)
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isUnauthorized())
