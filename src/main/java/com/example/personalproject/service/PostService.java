@@ -3,7 +3,10 @@ package com.example.personalproject.service;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.entity.Post;
 import com.example.personalproject.domain.request.UserPostRequest;
+import com.example.personalproject.exception.ErrorCode;
+import com.example.personalproject.exception.UserException;
 import com.example.personalproject.repository.PostRepository;
+import com.example.personalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 @Service
@@ -12,7 +15,11 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    public PostDto write(UserPostRequest userPostRequest) {
+    private final UserRepository userRepository;
+
+    public PostDto write(UserPostRequest userPostRequest, String name) {
+
+        userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.INVALID_TOKEN,"잘못된 token 입니다."));
 
         Post post = Post.builder()
                 .title(userPostRequest.getTitle())
