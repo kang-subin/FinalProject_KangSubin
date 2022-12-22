@@ -1,6 +1,7 @@
 package com.example.personalproject.configuration;
 
 import com.example.personalproject.JwtTokenUtil.JwtTokenUtil;
+import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.UserService;
 import lombok.AllArgsConstructor;
