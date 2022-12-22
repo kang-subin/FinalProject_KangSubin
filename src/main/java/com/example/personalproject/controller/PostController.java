@@ -18,7 +18,7 @@ public class PostController {
     @PostMapping("/posts")
     public Response<UserPostResponse> write (@RequestBody UserPostRequest userPostRequest){
         PostDto postDto = postService.write(userPostRequest);
-        return Response.success(new UserPostResponse(postDto.getId(),"포스트 등록 완료"));
+        return Response.success(new UserPostResponse("포스트 등록 완료", postDto.getId()));
     }
 
 }
