@@ -26,21 +26,24 @@ public class PostController {
         return Response.success(new UserPostResponse("포스트 등록 완료", postDto.getId()));
     }
 
-    @GetMapping(value = "/{id}")
-    public Response<UserPostDetailResponse>detail(@PathVariable Long id){
-        PostDetailDto postDetailDto = postService.detail(id);
+    @GetMapping(value = "/{postId}")
+    public Response<UserPostDetailResponse>detail(@PathVariable Long postId){
+        PostDetailDto postDetailDto = postService.detail(postId);
         return Response.success(new UserPostDetailResponse(postDetailDto.getId(), postDetailDto.getTitle(),
                                     postDetailDto.getBody(), postDetailDto.getUserName(),
                                     postDetailDto.getCreatedAt(),postDetailDto.getLastModifiedAt()));
 
     }
-    
+
     @DeleteMapping(value = "/{id}")
-    public Response<UserPostDeleteResponse>delete (@PathVariable Long id){
+    public Response<UserPostDeleteResponse>delete(@PathVariable Long id){
     PostDto postDto = postService.delete(id);
     return Response.success(new UserPostDeleteResponse("포스트 삭제 완료",id));
 
     }
+
+
+
 
 
 }

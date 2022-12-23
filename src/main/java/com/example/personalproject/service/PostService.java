@@ -24,7 +24,7 @@ public class PostService {
         User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.INVALID_TOKEN,"잘못된 token 입니다."));
 
         Post post = Post.builder()
-                .userName(name)
+                .user(user)
                 .title(userPostRequest.getTitle())
                 .body(userPostRequest.getBody())
                 .build();
@@ -35,15 +35,15 @@ public class PostService {
 
     }
 
-    public PostDetailDto detail(Long id) {
+    public PostDetailDto detail(Long postId) {
 
-        Post post = postRepository.findById(id).orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
 
         PostDetailDto postDetailDto = PostDetailDto.builder()
                 .id(post.getId())
                 .title(post.getTitle())
                 .body(post.getBody())
-                .userName(post.getUserName())
+                .userName(post.getUser().getUserName())
                 .createdAt(post.getCreatedAt())
                 .lastModifiedAt(post.getLastModifiedAt())
                 .build();

@@ -13,11 +13,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 
-public class Post extends Date{
+public class Post extends Date {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
     private String title;
     private String body;
 

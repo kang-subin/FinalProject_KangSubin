@@ -17,6 +17,6 @@ public class PostDetailDto {
     private String title;
     private String body;
     private String userName;
-    private String createdAt;
-    private String  lastModifiedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 }

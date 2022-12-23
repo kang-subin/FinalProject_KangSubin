@@ -17,21 +17,10 @@ import java.time.format.DateTimeFormatter;
 public class Date {
     @CreatedDate
     @Column(updatable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(updatable = false)
-    private String lastModifiedAt;
-
-    @PrePersist //해당 엔티티 저장하기 전
-    void onPrePersist(){
-        this.createdAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd hh:mm:ss"));
-        this.lastModifiedAt = createdAt;
-    }
-
-    @PreUpdate //해당 엔티티 수정 하기 전
-    void onPreUpdate(){
-        this.lastModifiedAt = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/mm/dd hh:mm:ss"));
-    }
+    private LocalDateTime lastModifiedAt;
 
 }
