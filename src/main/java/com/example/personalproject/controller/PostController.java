@@ -23,4 +23,6 @@ public class PostController {
         return Response.success(new UserPostResponse("포스트 등록 완료", postDto.getId()));
     }
 
+
+
 }
