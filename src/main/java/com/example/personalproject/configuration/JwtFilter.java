@@ -1,13 +1,9 @@
 package com.example.personalproject.configuration;
 
 import com.example.personalproject.JwtTokenUtil.JwtTokenUtil;
-import com.example.personalproject.exception.ErrorCode;
-import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.UserService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +20,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @RequiredArgsConstructor
 @Slf4j
+
 public class JwtFilter extends OncePerRequestFilter {
     private final String secretKey;
     private final UserService userService;
@@ -32,12 +29,14 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION);
-        if(authorization == null || !authorization.startsWith("Bearer ")){
-            log.error("Token 이 없거나 잘못되었습니다.");
-            filterChain.doFilter(request,response);
-        return;
-        }
+        try {
+            if (authorization == null || !authorization.startsWith("Bearer ")) {
+            }
+        } catch (JwtException e) {
 
+            log.error("Token 이 없거나 잘못되었습니다.");
+
+        }
         String token;
 
         try {

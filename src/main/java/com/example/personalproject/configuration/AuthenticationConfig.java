@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class AuthenticationConfig {
 
     private final UserService userService;
+
     @Value("hello")
     private String secretkey;
 
@@ -28,7 +29,9 @@ public class AuthenticationConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join","/api/v1/users/login","/api/v1/hello").permitAll()
+                .antMatchers("/api/v1/hello",
+                        "/api/v1/users/join","/api/v1/users/login").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/posts/**").permitAll()
                 .antMatchers("/api/v1/**").authenticated()
                 .and()
                 .sessionManagement()
