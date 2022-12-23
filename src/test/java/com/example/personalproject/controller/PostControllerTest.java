@@ -2,9 +2,9 @@ package com.example.personalproject.controller;
 
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.request.UserPostRequest;
+import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.PostService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,6 +62,23 @@ class PostControllerTest {
     }
 
 
+    @Test
+    @DisplayName("포스트 작성 실패(1) - 인증 실패 - JWT를 Bearer Token으로 보내지 않은 경우")
+    public void writeFail() throws Exception {
+        UserPostRequest userPostRequest = new UserPostRequest("테스트", "안녕");
+        given(postService.write(any(),any())).willThrow(new UserException(ErrorCode.INVALID_PERMISSION,""));
+
+        String url ="/api/v1/posts";
+        String json = new ObjectMapper().writeValueAsString(userPostRequest);
+
+        mockMvc.perform(post(url)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+
+    }
 
 
 

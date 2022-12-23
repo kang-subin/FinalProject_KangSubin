@@ -88,7 +88,7 @@ class UserControllerTest {
                 .andDo(print());
     }
 
-    @Test // 실패함 ..
+    @Test
     @WithMockUser
     @DisplayName("로그인 성공")
     public void login() throws Exception {
