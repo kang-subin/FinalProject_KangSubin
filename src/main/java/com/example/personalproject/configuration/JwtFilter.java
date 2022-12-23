@@ -29,13 +29,10 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorization = request.getHeader(AUTHORIZATION);
-        try {
             if (authorization == null || !authorization.startsWith("Bearer ")) {
-            }
-        } catch (JwtException e) {
-
             log.error("Token 이 없거나 잘못되었습니다.");
-
+                filterChain.doFilter(request,response);
+                return;
         }
         String token;
 
