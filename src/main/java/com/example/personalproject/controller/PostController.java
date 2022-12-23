@@ -3,7 +3,6 @@ package com.example.personalproject.controller;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
-import com.example.personalproject.domain.request.UserPostDeleteRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.domain.response.UserPostDeleteResponse;
@@ -35,11 +34,11 @@ public class PostController {
                                     postDetailDto.getCreatedAt(),postDetailDto.getLastModifiedAt()));
 
     }
-
-    @DeleteMapping(value = "")
-    public Response<UserPostDeleteResponse>delete (@RequestBody UserPostDeleteRequest userPostDeleteRequest){
-    PostDto postDto = postService.delete(userPostDeleteRequest);
-    return Response.success(new UserPostDeleteResponse("포스트 삭제 완료", userPostDeleteRequest.getId()));
+    
+    @DeleteMapping(value = "/{id}")
+    public Response<UserPostDeleteResponse>delete (@PathVariable Long id){
+    PostDto postDto = postService.delete(id);
+    return Response.success(new UserPostDeleteResponse("포스트 삭제 완료",id));
 
     }
 

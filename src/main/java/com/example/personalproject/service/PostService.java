@@ -4,7 +4,6 @@ import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.entity.Post;
 import com.example.personalproject.domain.entity.User;
-import com.example.personalproject.domain.request.UserPostDeleteRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
@@ -53,13 +52,14 @@ public class PostService {
 
     }
 
-    public PostDto delete (UserPostDeleteRequest userPostDeleteRequest){
+    public PostDto delete(Long id){
 
-     if(postRepository.findById(userPostDeleteRequest.getId()).isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND,"해당 포스트가 없습니다.");
-     postRepository.deleteById(userPostDeleteRequest.getId());
+     if(postRepository.findById(id).isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND,"해당 포스트가 없습니다.");
 
-     return PostDto.builder()
-             .id(userPostDeleteRequest.getId())
+         postRepository.deleteById(id);
+
+         return PostDto.builder()
+             .id(id)
              .build();
     }
 
