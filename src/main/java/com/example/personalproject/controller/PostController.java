@@ -4,9 +4,11 @@ import com.example.personalproject.domain.dto.ListResponse;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
+import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.domain.response.UserPostDeleteResponse;
+import com.example.personalproject.domain.response.UserPostEditResponse;
 import com.example.personalproject.domain.response.UserPostResponse;
 import com.example.personalproject.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -57,5 +59,12 @@ public class PostController {
 
     }
 
+    @PutMapping("/{id}")
+    public Response<UserPostEditResponse>edit(@PathVariable Long id, @ApiIgnore Authentication authentication, @RequestBody UserPostEditRequest userPostEditRequest){
+        String name = authentication.getName();
+        PostDto postDto = postService.edit(id,name,userPostEditRequest);
+        return Response.success(new UserPostEditResponse("포스트 수정 완료",postDto.getId()));
+
+    }
 
 }
