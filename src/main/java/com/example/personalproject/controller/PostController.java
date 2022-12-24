@@ -1,5 +1,6 @@
 package com.example.personalproject.controller;
 
+import com.example.personalproject.domain.dto.ListResponse;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
@@ -9,9 +10,14 @@ import com.example.personalproject.domain.response.UserPostDeleteResponse;
 import com.example.personalproject.domain.response.UserPostResponse;
 import com.example.personalproject.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -35,15 +41,21 @@ public class PostController {
 
     }
 
-    @DeleteMapping(value = "/{id}")
-    public Response<UserPostDeleteResponse>delete(@PathVariable Long id){
-    PostDto postDto = postService.delete(id);
-    return Response.success(new UserPostDeleteResponse("포스트 삭제 완료",id));
-
+    @GetMapping("")
+    public ListResponse<List<UserPostDetailResponse>> list(Pageable pageable){
+        List<UserPostDetailResponse> list = postService.list(pageable);
+        return ListResponse.success(list, pageable);
     }
 
 
+    @DeleteMapping(value = "/{id}")
+    public Response<UserPostDeleteResponse>delete(@PathVariable Long id, @ApiIgnore Authentication authentication){
 
+        String name =authentication.getName();
+        PostDto postDto = postService.delete(id, name);
+        return Response.success(new UserPostDeleteResponse("포스트 삭제 완료",id));
+
+    }
 
 
 }
