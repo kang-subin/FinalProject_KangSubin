@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -68,7 +69,7 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
 
         User user = userRepository.findByUserName(name)
-                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, name +"이 없습니다"));
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "Not founded"));
 
 
         if (post.isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다.");
@@ -104,7 +105,7 @@ public class PostService {
         Optional<Post> post = postRepository.findById(id);
 
         User user = userRepository.findByUserName(name)
-                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, name +"이 없습니다"));
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
 
         if (post.isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다.");
         if (!(user.getUserName().equals(post.get().getUser().getUserName()))) throw new UserException(ErrorCode.INVALID_PERMISSION,"사용자가 권한이 없습니다.");

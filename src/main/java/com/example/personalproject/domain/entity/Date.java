@@ -22,7 +22,6 @@ public class Date {
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(updatable = true)
     private LocalDateTime lastModifiedAt;
 
 }

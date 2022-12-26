@@ -1,6 +1,5 @@
 package com.example.personalproject.controller;
 
-import com.example.personalproject.domain.dto.ListResponse;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
@@ -12,14 +11,15 @@ import com.example.personalproject.domain.response.UserPostEditResponse;
 import com.example.personalproject.domain.response.UserPostResponse;
 import com.example.personalproject.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @RestController
@@ -34,7 +34,7 @@ public class PostController {
         return Response.success(new UserPostResponse("포스트 등록 완료", postDto.getId()));
     }
 
-    @GetMapping(value = "/{postId}")
+    @GetMapping("/{postId}")
     public Response<UserPostDetailResponse>detail(@PathVariable Long postId){
         PostDetailDto postDetailDto = postService.detail(postId);
         return Response.success(new UserPostDetailResponse(postDetailDto.getId(), postDetailDto.getTitle(),
@@ -44,13 +44,15 @@ public class PostController {
     }
 
     @GetMapping("")
-    public ListResponse<List<UserPostDetailResponse>> list(Pageable pageable){
-        List<UserPostDetailResponse> list = postService.list(pageable);
-        return ListResponse.success(list, pageable);
+    public Response<PageImpl<UserPostDetailResponse>> list(){
+        PageRequest pageRequest = PageRequest.of(0,20,Sort.by("id").descending());
+        List<UserPostDetailResponse> list = postService.list(pageRequest);
+
+        return Response.success(new PageImpl<>(list));
     }
 
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping( "/{id}")
     public Response<UserPostDeleteResponse>delete(@PathVariable Long id, @ApiIgnore Authentication authentication){
 
         String name =authentication.getName();
