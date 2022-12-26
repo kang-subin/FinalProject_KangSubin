@@ -105,7 +105,7 @@ class PostControllerTest {
     }
 
     @Test
-    @WithMockUser // 접근허용 걍 생각하지말고 습관으로 넣어라
+    @WithMockUser
     @DisplayName("포스트 상세")
     public void detail() throws Exception {
 

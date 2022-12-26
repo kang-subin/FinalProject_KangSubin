@@ -10,7 +10,7 @@ public class HelloController {
 
     @GetMapping("/hello")
     public String hello(){
-        String message = "popin";
+        String message = "happy_new_year";
         return message;
     }
 
