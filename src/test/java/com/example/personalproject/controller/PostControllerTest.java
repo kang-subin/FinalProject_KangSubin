@@ -5,12 +5,14 @@ import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
+import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.PostService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,13 +22,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-
-
 import java.time.LocalDateTime;
-
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -314,12 +313,16 @@ class PostControllerTest {
     @Test
     @WithMockUser
     @DisplayName("포스트 리스트 - 조회성공")
-    public void list(){
+    public void list() throws Exception {
 
-//        String url ="/api/v1/posts";
-//        PageRequest pageRequest = PageRequest.of(0,20, Sort.by("id").descending());
-//
-//        given(postService.list(pageRequest)).willReturn()
+        String url ="/api/v1/posts";
+        PageRequest pageRequest = PageRequest.of(0,20, Sort.by("id").descending());
+        ArgumentCaptor<UserPostDetailResponse> responseList = ArgumentCaptor.forClass(UserPostDetailResponse.class);
+
+        given(postService.list(pageRequest)).willReturn(responseList.getAllValues());
+        mockMvc.perform(get(url)
+                        .with(csrf()))
+                .andExpect(status().isOk());
 
 
     }
