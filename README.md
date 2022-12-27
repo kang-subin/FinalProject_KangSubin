@@ -37,8 +37,10 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 > Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
 ---
 ## Review
-> [개선사항]<br>
-> 
+> [개선 필요사항]<br>
+> dto 리팩토링<br>
+> JwtFilter Exception 구현 <br>
+> UserRole 구현
 
 
 
