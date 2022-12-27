@@ -4,8 +4,6 @@
 [Swagger]<br>
 http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 
-[GitHub]<br>
-https://github.com/kang-subin
 ---
 ## 체크리스트
 1. -[x] Gitlab CI & Crontab CD 구현
