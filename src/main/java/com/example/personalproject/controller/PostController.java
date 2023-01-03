@@ -12,6 +12,7 @@ import com.example.personalproject.service.PostService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Request;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -82,5 +83,28 @@ public class PostController {
         CommentDto commentDto = postService.comment_edit(userCommentRequest,postId,id,name);
         return Response.success(new UserCommentEditResponse(commentDto.getId(),commentDto.getComment(),commentDto.getUserName(),commentDto.getPostId(),commentDto.getCreatedAt(),commentDto.getLastModifiedAt()));
     }
+
+    @DeleteMapping("/{postId}/comments/{id}")
+    public Response<UserCommentDeleteResponse> comment_delete(@PathVariable Long postId, @PathVariable Long id, @ApiIgnore Authentication authentication){
+        String name = authentication.getName();
+        CommentDto commentDto = postService.comment_delete(postId, id, name);
+        return Response.success(new UserCommentDeleteResponse("댓글 삭제 완료",commentDto.getId()));
+    }
+
+    @GetMapping("/{postId}/comments")
+    public Response<PageImpl<UserCommentResponse>> comment_list(@PathVariable Long postId, @RequestParam(name = "page") Integer page){
+        PageRequest pageRequest = PageRequest.of(page,20,Sort.by("createdAt").descending());
+        List<UserCommentResponse> list = postService.comment_list(postId,pageRequest);
+        return Response.success(new PageImpl<>(list));
+    }
+
+    @GetMapping("/my")
+    public Response<PageImpl<UserPostMyResponse>> post_my(@ApiIgnore Authentication authentication){
+        String name = authentication.getName();
+        PageRequest pageRequest = PageRequest.of(0,20,Sort.by("createdAt").descending());
+        List<UserPostMyResponse> list = postService.post_my(name, pageRequest);
+        return Response.success(new PageImpl<>(list));
+    }
+
 
 }

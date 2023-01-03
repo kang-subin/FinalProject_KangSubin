@@ -9,7 +9,9 @@ import com.example.personalproject.domain.entity.User;
 import com.example.personalproject.domain.request.UserCommentRequest;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
+import com.example.personalproject.domain.response.UserCommentResponse;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
+import com.example.personalproject.domain.response.UserPostMyResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.repository.CommentRepository;
@@ -17,9 +19,12 @@ import com.example.personalproject.repository.PostRepository;
 import com.example.personalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -189,6 +194,55 @@ public class PostService {
         return commentDto;
     }
 
+
+    public CommentDto comment_delete(Long postId, Long id, String name){
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded")); // 인증 실패
+        Comment comment = commentRepository.findById(id).orElseThrow(()-> new UserException(ErrorCode.COMMENT_NOT_FOUND,"해당 댓글이 없습니다.")); // 댓글 불일치
+
+        if(!(comment.getUser().getUserName().equals(name)))  throw new UserException(ErrorCode.INVALID_PERMISSION, "사용자가 권한이 없습니다."); // 작성자 불일치
+
+        commentRepository.delete(comment);
+
+        CommentDto commentDto = CommentDto.builder()
+                .id(id)
+                .build();
+
+        return commentDto;
+    }
+
+
+    public List<UserCommentResponse> comment_list(Long postId, PageRequest pageRequest){
+        Post post = postRepository.findById(postId).orElseThrow(()-> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        Page<Comment> list = commentRepository.findAll(pageRequest);
+
+        List<UserCommentResponse> commentList = list.map(lists -> UserCommentResponse.builder()
+                .id(lists.getId())
+                .comment(lists.getComment())
+                .userName(lists.getUser().getUserName())
+                .postId(lists.getPost().getId())
+                .createdAt(lists.getCreatedAt())
+                .build())
+                .toList();
+
+        return commentList;
+    }
+
+    public List<UserPostMyResponse> post_my(String name, PageRequest pageRequest){
+        User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
+        Page<Post> list = postRepository.findByUserId(user.getId(), pageRequest);
+
+        List<UserPostMyResponse> postList = list.map(lists -> UserPostMyResponse.builder()
+                        .id(lists.getId())
+                        .title(lists.getTitle())
+                        .body(lists.getBody())
+                        .userName(lists.getUser().getUserName())
+                        .createdAt(lists.getCreatedAt())
+                        .build()).toList();
+
+        return postList;
+    }
 }
 
 

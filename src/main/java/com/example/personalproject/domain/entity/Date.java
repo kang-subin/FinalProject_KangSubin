@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 
 public class Date {
     @CreatedDate
-    @Column(updatable = false)
+    @Column(updatable = false, name = "createdAt")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
