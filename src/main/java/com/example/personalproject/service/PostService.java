@@ -1,24 +1,27 @@
 package com.example.personalproject.service;
 
+import com.example.personalproject.domain.dto.CommentDto;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
-import com.example.personalproject.domain.entity.Date;
+import com.example.personalproject.domain.entity.Comment;
 import com.example.personalproject.domain.entity.Post;
 import com.example.personalproject.domain.entity.User;
+import com.example.personalproject.domain.request.UserCommentRequest;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
+import com.example.personalproject.repository.CommentRepository;
 import com.example.personalproject.repository.PostRepository;
 import com.example.personalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,6 +33,8 @@ public class PostService {
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
+
+    private final CommentRepository commentRepository;
 
     public PostDto write(UserPostRequest userPostRequest, String name) {
 
@@ -73,7 +78,8 @@ public class PostService {
 
 
         if (post.isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다.");
-        if (!(user.getUserName().equals(post.get().getUser().getUserName()))) throw new UserException(ErrorCode.INVALID_PERMISSION,"사용자가 권한이 없습니다.");
+        if (!(user.getUserName().equals(post.get().getUser().getUserName())))
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "사용자가 권한이 없습니다.");
 
         postRepository.deleteById(id);
 
@@ -100,15 +106,16 @@ public class PostService {
         return responseList;
     }
 
-    public PostDto edit(Long id, String name, UserPostEditRequest userPostEditRequest){
+    public PostDto edit(Long id, String name, UserPostEditRequest userPostEditRequest) {
 
         Optional<Post> post = postRepository.findById(id);
 
         User user = userRepository.findByUserName(name)
-                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
+                .orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "Not founded"));
 
         if (post.isEmpty()) throw new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다.");
-        if (!(user.getUserName().equals(post.get().getUser().getUserName()))) throw new UserException(ErrorCode.INVALID_PERMISSION,"사용자가 권한이 없습니다.");
+        if (!(user.getUserName().equals(post.get().getUser().getUserName())))
+            throw new UserException(ErrorCode.INVALID_PERMISSION, "사용자가 권한이 없습니다.");
 
 
         Post postEdit = new Post();
@@ -120,7 +127,6 @@ public class PostService {
         postEdit.setCreatedAt(LocalDateTime.now());
 
 
-
         Post saved = postRepository.saveAndFlush(postEdit);
 
         return PostDto.builder()
@@ -130,8 +136,67 @@ public class PostService {
                 .build();
     }
 
+    public CommentDto comment_write(UserCommentRequest userCommentRequest, Long postId, Authentication authentication) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        User commentUser = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> new UserException(ErrorCode.USERNAME_NOT_FOUND, "Not founded"));
+
+        Comment comment = Comment.builder()
+                .comment(userCommentRequest.getComment())
+                .post(post)
+                .user(commentUser)
+                .build();
+
+        Comment saved = commentRepository.save(comment);
+
+        CommentDto commentDto = CommentDto.builder()
+                .id(saved.getId())
+                .comment(saved.getComment())
+                .userName(saved.getUser().getUserName())
+                .postId(saved.getPost().getId())
+                .createdAt(saved.getCreatedAt())
+                .build();
+
+        return commentDto;
+
+    }
+
+    public CommentDto comment_edit(UserCommentRequest userCommentRequest, Long postId, Long id, String name){
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded")); // 인증 실패
+        Comment comment = commentRepository.findById(id).orElseThrow(()-> new UserException(ErrorCode.COMMENT_NOT_FOUND,"해당 댓글이 없습니다.")); // 댓글 불일치
+
+        if(!(comment.getUser().getUserName().equals(name)))  throw new UserException(ErrorCode.INVALID_PERMISSION, "사용자가 권한이 없습니다."); // 작성자 불일치
+
+
+        comment.setId(id);
+        comment.setComment(userCommentRequest.getComment());
+        comment.setPost(post);
+        comment.setUser(user);
+        comment.setLastModifiedAt(LocalDateTime.now());
+
+        Comment saved = commentRepository.saveAndFlush(comment);
+
+        CommentDto commentDto = CommentDto.builder()
+                .id(saved.getId())
+                .comment(saved.getComment())
+                .userName(saved.getUser().getUserName())
+                .postId(saved.getPost().getId())
+                .createdAt(saved.getCreatedAt())
+                .lastModifiedAt(saved.getLastModifiedAt())
+                .build();
+
+        return commentDto;
+    }
 
 }
+
+
+
+
+
+
+
 
 
 

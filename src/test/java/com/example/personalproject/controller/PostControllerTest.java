@@ -114,7 +114,7 @@ class PostControllerTest {
         Long id = 1L;
         given(postService.detail(any())).willReturn(postDetailDto);
 
-        String url ="/api/v1/posts/{id}";
+        String url ="/api/v1/posts/1";
 
         mockMvc.perform(get(url)
                         .with(csrf()))

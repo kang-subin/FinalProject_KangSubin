@@ -1,16 +1,17 @@
 package com.example.personalproject.controller;
 
+import com.example.personalproject.domain.dto.CommentDto;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
+import com.example.personalproject.domain.request.UserCommentRequest;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
-import com.example.personalproject.domain.response.UserPostDetailResponse;
-import com.example.personalproject.domain.response.UserPostDeleteResponse;
-import com.example.personalproject.domain.response.UserPostEditResponse;
-import com.example.personalproject.domain.response.UserPostResponse;
+import com.example.personalproject.domain.response.*;
 import com.example.personalproject.service.PostService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Request;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -67,6 +68,19 @@ public class PostController {
         PostDto postDto = postService.edit(id,name,userPostEditRequest);
         return Response.success(new UserPostEditResponse("포스트 수정 완료",postDto.getId()));
 
+    }
+
+    @PostMapping("/{postsId}/comments")
+    public Response<UserCommentResponse> comment_write(@RequestBody UserCommentRequest userCommentRequest, @PathVariable Long postsId, @ApiIgnore Authentication authentication){
+        CommentDto commentDto = postService.comment_write(userCommentRequest, postsId, authentication);
+        return Response.success(new UserCommentResponse(commentDto.getId(),commentDto.getComment(),commentDto.getUserName(),commentDto.getPostId(),commentDto.getCreatedAt()));
+    }
+
+    @PutMapping("/{postId}/comments/{id}")
+    public Response<UserCommentEditResponse> comment_edit(@RequestBody UserCommentRequest userCommentRequest ,@PathVariable Long postId, @PathVariable Long id, @ApiIgnore Authentication authentication){
+        String name = authentication.getName();
+        CommentDto commentDto = postService.comment_edit(userCommentRequest,postId,id,name);
+        return Response.success(new UserCommentEditResponse(commentDto.getId(),commentDto.getComment(),commentDto.getUserName(),commentDto.getPostId(),commentDto.getCreatedAt(),commentDto.getLastModifiedAt()));
     }
 
 }
