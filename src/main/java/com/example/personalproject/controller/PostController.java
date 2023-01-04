@@ -107,4 +107,12 @@ public class PostController {
     }
 
 
+    @PostMapping("/{postId}/likes")
+    public Response like(@PathVariable Long postId, @ApiIgnore Authentication authentication){
+        String name = authentication.getName();
+        Response response = postService.like(postId,name);
+        return response;
+    }
+
+
 }

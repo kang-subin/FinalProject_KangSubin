@@ -18,7 +18,9 @@ public enum ErrorCode {
 
     DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DB에러"),
 
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 댓글이 없습니다.");
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 댓글이 없습니다."),
+
+    DUPLICATE_LIKE(HttpStatus.CONFLICT,"이미 좋아요 한 포스트입니다.");
 
 
     private HttpStatus httpStatus;

@@ -1,14 +1,17 @@
 package com.example.personalproject.controller;
 
 
+import com.example.personalproject.domain.dto.CommentDto;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
+import com.example.personalproject.domain.request.UserCommentRequest;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.service.PostService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -312,7 +314,7 @@ class PostControllerTest {
 
     @Test
     @WithMockUser
-    @DisplayName("포스트 리스트 - 조회성공")
+    @DisplayName("포스트 리스트 - 조회 성공")
     public void list() throws Exception {
 
         String url ="/api/v1/posts";
@@ -326,6 +328,36 @@ class PostControllerTest {
 
 
     }
+
+
+//    @Test
+//    @WithMockUser
+//    @DisplayName("댓글 등록 - 작성 성공")
+//    public void comment_write() throws Exception {
+//
+//        UserCommentRequest userCommentRequest = new UserCommentRequest("댓글 작성");
+//        CommentDto commentDto = new CommentDto(1L,"댓글 작성","강수빈",1L,LocalDateTime.now(),LocalDateTime.now());
+//
+//        given(postService.comment_write(any(),any(),any())).willReturn(commentDto);
+//        String json = new ObjectMapper().writeValueAsString(userCommentRequest);
+//
+//        Long postsId = 1L;
+//        String url = "/api/v1/posts/{postsId}/comments";
+//
+//        mockMvc.perform(post(url,postsId)
+//                        .with(csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(json))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
+//                .andExpect(jsonPath("$.result").exists())
+//                .andExpect(jsonPath("$.result.id").exists())
+//                .andExpect(jsonPath("$.result.userName").exists())
+//                .andExpect(jsonPath("$.result.postId").exists())
+//                .andExpect(jsonPath("$.result.createdAt").exists())
+//                .andDo(print());
+//
+//    }
 
 
     }

@@ -3,7 +3,9 @@ package com.example.personalproject.service;
 import com.example.personalproject.domain.dto.CommentDto;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
+import com.example.personalproject.domain.dto.Response;
 import com.example.personalproject.domain.entity.Comment;
+import com.example.personalproject.domain.entity.Like;
 import com.example.personalproject.domain.entity.Post;
 import com.example.personalproject.domain.entity.User;
 import com.example.personalproject.domain.request.UserCommentRequest;
@@ -15,6 +17,7 @@ import com.example.personalproject.domain.response.UserPostMyResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.repository.CommentRepository;
+import com.example.personalproject.repository.LikeRepository;
 import com.example.personalproject.repository.PostRepository;
 import com.example.personalproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +26,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,6 +41,8 @@ public class PostService {
     private final UserRepository userRepository;
 
     private final CommentRepository commentRepository;
+
+    private final LikeRepository likeRepository;
 
     public PostDto write(UserPostRequest userPostRequest, String name) {
 
@@ -243,6 +246,26 @@ public class PostService {
 
         return postList;
     }
+
+    public Response like(Long postId, String name){
+
+        Post post = postRepository.findById(postId).orElseThrow(()-> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
+        User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
+
+        if(likeRepository.findByUserIdAndPostId(user.getId(),post.getId()).isPresent()) throw new UserException(ErrorCode.DUPLICATE_LIKE,"이미 좋아요를 누르셨습니다.");
+
+
+        Like like = Like.builder()
+                .post(post)
+                .user(user)
+                .build();
+
+        Like saved = likeRepository.save(like);
+
+        return new Response("SUCCESS","좋아요를 눌렀습니다.");
+    }
+
+
 }
 
 
