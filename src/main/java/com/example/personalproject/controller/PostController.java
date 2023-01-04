@@ -114,5 +114,10 @@ public class PostController {
         return response;
     }
 
+    @GetMapping("/{postId}/likes")
+    public Response like_count(@PathVariable Long postId){
+        Response response = postService.like_count(postId);
+        return response;
+    }
 
 }

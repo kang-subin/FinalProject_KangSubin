@@ -265,6 +265,17 @@ public class PostService {
         return new Response("SUCCESS","좋아요를 눌렀습니다.");
     }
 
+    public Response like_count(Long postId){
+
+        Long countLike = likeRepository.countLikeByPostId(postId);
+        //if(countLike == 0) throw new UserException(ErrorCode.LIKE_NOT_FOUND,"해당 포스트에 좋아요가 없습니다.");
+
+        return new Response("SUCCESS",countLike);
+    }
+
+
+
+
 
 }
 
