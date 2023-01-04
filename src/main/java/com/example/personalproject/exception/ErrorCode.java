@@ -16,7 +16,7 @@ public enum ErrorCode {
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED,"사용자가 권한이 없습니다."),
     POST_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 포스트가 없습니다."),
 
-    DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"DB에러"),
+    DATABASE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"데이터베이스 에러"),
 
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"해당 댓글이 없습니다."),
 

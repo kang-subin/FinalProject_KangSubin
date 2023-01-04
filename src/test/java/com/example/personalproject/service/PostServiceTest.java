@@ -9,6 +9,7 @@ import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
 import com.example.personalproject.repository.CommentRepository;
+import com.example.personalproject.repository.LikeRepository;
 import com.example.personalproject.repository.PostRepository;
 import com.example.personalproject.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -32,12 +33,13 @@ class PostServiceTest {
 
     private CommentRepository commentRepository = Mockito.mock(CommentRepository.class);
 
+    private LikeRepository likeRepository = Mockito.mock(LikeRepository.class);
+
     private PostService postService;
 
     @BeforeEach
     void setup() {
-
-        postService = new PostService(postRepository, userRepository, commentRepository);
+        postService = new PostService(postRepository, userRepository, commentRepository,likeRepository);
     }
 
     @Test
