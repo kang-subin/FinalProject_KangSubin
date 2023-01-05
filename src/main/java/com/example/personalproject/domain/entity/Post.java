@@ -6,7 +6,6 @@ import org.hibernate.annotations.Where;
 
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,8 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
-@Where(clause = "deleted_at is NULL")
+//@SQLDelete(sql = "UPDATE post SET deleted = true WHERE id = ?")
+//@Where(clause = "deleted = false")
 public class Post extends Date {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +26,7 @@ public class Post extends Date {
     @JoinColumn(name = "User_id")
     private User user;
 
-    private LocalDateTime deletedAt;
+    //private boolean deleted = Boolean.FALSE;
 
 
 }

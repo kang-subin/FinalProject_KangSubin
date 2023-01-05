@@ -5,10 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Table(name = "\"like\"")
-
 public class Like extends Date{
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,7 +8,10 @@ import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
-import com.example.personalproject.repository.*;
+import com.example.personalproject.repository.CommentRepository;
+import com.example.personalproject.repository.LikeRepository;
+import com.example.personalproject.repository.PostRepository;
+import com.example.personalproject.repository.UserRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +35,11 @@ class PostServiceTest {
 
     private LikeRepository likeRepository = Mockito.mock(LikeRepository.class);
 
-    private AlarmRepository alarmRepository = Mockito.mock(AlarmRepository.class);
-
     private PostService postService;
 
     @BeforeEach
     void setup() {
-        postService = new PostService(postRepository, userRepository, commentRepository,likeRepository,alarmRepository);
+        postService = new PostService(postRepository, userRepository, commentRepository,likeRepository);
     }
 
     @Test
