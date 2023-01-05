@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
-@Where(clause = "deleted_at is NULL")
+//@SQLDelete(sql = "UPDATE post SET deleted_at = current_timestamp WHERE id = ?")
+//@Where(clause = "deleted_at is NULL")
 
 public class Post extends Date {
 @Id
@@ -27,7 +27,7 @@ public class Post extends Date {
     @JoinColumn(name = "User_id")
     private User user;
 
-    private LocalDateTime deletedAt;
+   // private LocalDateTime deletedAt;
 
 
 
