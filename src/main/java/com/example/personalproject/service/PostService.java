@@ -4,22 +4,17 @@ import com.example.personalproject.domain.dto.CommentDto;
 import com.example.personalproject.domain.dto.PostDetailDto;
 import com.example.personalproject.domain.dto.PostDto;
 import com.example.personalproject.domain.dto.Response;
-import com.example.personalproject.domain.entity.Comment;
-import com.example.personalproject.domain.entity.Like;
-import com.example.personalproject.domain.entity.Post;
-import com.example.personalproject.domain.entity.User;
+import com.example.personalproject.domain.entity.*;
 import com.example.personalproject.domain.request.UserCommentRequest;
 import com.example.personalproject.domain.request.UserPostEditRequest;
 import com.example.personalproject.domain.request.UserPostRequest;
+import com.example.personalproject.domain.response.UserAlarmResponse;
 import com.example.personalproject.domain.response.UserCommentResponse;
 import com.example.personalproject.domain.response.UserPostDetailResponse;
 import com.example.personalproject.domain.response.UserPostMyResponse;
 import com.example.personalproject.exception.ErrorCode;
 import com.example.personalproject.exception.UserException;
-import com.example.personalproject.repository.CommentRepository;
-import com.example.personalproject.repository.LikeRepository;
-import com.example.personalproject.repository.PostRepository;
-import com.example.personalproject.repository.UserRepository;
+import com.example.personalproject.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -43,6 +38,8 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     private final LikeRepository likeRepository;
+
+    private final AlarmRepository alarmRepository;
 
     public PostDto write(UserPostRequest userPostRequest, String name) {
 
@@ -154,7 +151,17 @@ public class PostService {
                 .user(commentUser)
                 .build();
 
+        Alarm alarm = Alarm.builder()
+                .alarmType("NEW_COMMENT_ON_POST")
+                .formUserId(commentUser.getId())
+                .user(post.getUser())
+                .targetId(post.getId())
+                .text("new comment!")
+                .createdAt(LocalDateTime.now())
+                .build();
+
         Comment saved = commentRepository.save(comment);
+        Alarm alarmSaved = alarmRepository.save(alarm);
 
         CommentDto commentDto = CommentDto.builder()
                 .id(saved.getId())
@@ -254,13 +261,23 @@ public class PostService {
 
         if(likeRepository.findByUserIdAndPostId(user.getId(),post.getId()).isPresent()) throw new UserException(ErrorCode.DUPLICATE_LIKE,"이미 좋아요를 누르셨습니다.");
 
-
         Like like = Like.builder()
                 .post(post)
                 .user(user)
                 .build();
 
+        Alarm alarm = Alarm.builder()
+                .alarmType("NEW_LIKE_ON_POST")
+                .formUserId(user.getId())
+                .user(post.getUser())
+                .targetId(post.getId())
+                .text("new like!")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+
         Like saved = likeRepository.save(like);
+        Alarm alarmSaved = alarmRepository.save(alarm);
 
         return new Response("SUCCESS","좋아요를 눌렀습니다.");
     }
@@ -273,8 +290,22 @@ public class PostService {
         return new Response("SUCCESS",countLike);
     }
 
+    public List<UserAlarmResponse> alarm(String name, PageRequest pageRequest){
 
+        User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
+        Page<Alarm> list = alarmRepository.findAll(pageRequest);
 
+        List<UserAlarmResponse> alarmList = list.map (lists-> UserAlarmResponse.builder()
+                .id(lists.getId())
+                .alarmType(lists.getAlarmType())
+                .fromUserId(lists.getFormUserId())
+                .targetId(lists.getTargetId())
+                .text(lists.getText())
+                .createdAt(lists.getCreatedAt())
+                .build()).toList();
+
+        return alarmList;
+    }
 
 
 }

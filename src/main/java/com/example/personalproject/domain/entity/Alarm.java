@@ -4,28 +4,27 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
-@Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "\"like\"")
-public class Like extends Date{
+@Entity
+public class Alarm {
 @Id
 @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long formUserId;
+    private Long targetId;
+    private String text;
+    private String alarmType;
+    private LocalDateTime createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "User_id")
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
-
 
 }

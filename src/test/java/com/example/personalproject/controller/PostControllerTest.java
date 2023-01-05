@@ -682,7 +682,6 @@ class PostControllerTest {
     }
 
 
-
     @Test
     @WithMockUser
     @DisplayName("좋아요 누르기 성공")
