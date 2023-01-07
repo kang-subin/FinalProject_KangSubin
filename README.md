@@ -1,6 +1,4 @@
-# [종합 프로젝트] 개인 프로젝트
-
-## SNS 웹 페이지 구현<br>
+# [종합 프로젝트] 개인 프로젝트 - SNS 웹 페이지 구현<br>
 
 [Swagger]<br>
 http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
@@ -16,9 +14,7 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 - IDE : IntelliJ
 ---
 ## ERD
-![PP-ERD](/uploads/37b52e7d12237acd529842b0dee74c04/PP-ERD.png)
 
----
 ## 체크리스트
 1. -[x] Gitlab CI & Crontab CD 구현
 2. -[x] 회원가입 / 로그인 API 구현
