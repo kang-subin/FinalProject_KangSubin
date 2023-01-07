@@ -1,6 +1,6 @@
 # [종합 프로젝트] 개인 프로젝트 - SNS 웹 페이지 구현<br>
 
-[Swagger]<br>
+[Swagger]
 http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 ---
 ## 개발환경<br>
