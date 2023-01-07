@@ -1,8 +1,24 @@
-# [종합 프로젝트] 첫 번째 미션
+# [종합 프로젝트] 개인 프로젝트
 
 
+
+---
+## SNS 웹 페이지 구현
 [Swagger]<br>
 http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
+---
+## 개발환경<br>
+- Java 11
+- Build : Gradle 7.5.1
+- Framework : Springboot 2.7.5
+- Database : MySQL 8.0
+- CI & CD : GitLab
+- Server : AWS EC2
+- Deploy : Docker
+- IDE : IntelliJ
+---
+## ERD
+<img src="PP-ERD.png">
 
 ---
 ## 체크리스트
@@ -15,6 +31,7 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 7. -[x] 포스트 상세조회 / 삭제 테스트 코드 작성
 8. -[x] 포스트 목록 / 수정 API 구현
 9. -[x] 포스트 목록 / 수정 테스트 코드 작성
+
 ---
 ## 상세설명
 1. Gitlab CI & Crontab CD 구현
