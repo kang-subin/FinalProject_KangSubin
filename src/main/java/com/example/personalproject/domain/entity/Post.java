@@ -29,6 +29,4 @@ public class Post extends Date {
 
     private LocalDateTime deletedAt;
 
-
-
 }
