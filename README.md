@@ -2,7 +2,7 @@
 
 >Swagger<br>
 http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
----
+
 ## 개발환경<br>
 - Java 11
 - Build : Gradle 7.5.1
@@ -12,7 +12,7 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 - Server : AWS EC2
 - Deploy : Docker
 - IDE : IntelliJ
----
+
 ## ERD
 
 ## 체크리스트
@@ -26,7 +26,6 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 8. -[x] 포스트 목록 / 수정 API 구현
 9. -[x] 포스트 목록 / 수정 테스트 코드 작성
 
----
 ## 상세설명
 1. Gitlab CI & Crontab CD 구현
 > Gitlab CI & Crontab CD를 통해 git push 할 때마다 Swagger에 반영되도록 설정
@@ -46,7 +45,8 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 >[EndPoints] GET /api/v1/posts , PUT /api/v1/posts/{id}<br>
 9. 포스트 목록 / 수정 테스트 코드 작성
 > Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
----
+
+
 ## Review
 > [개선 필요사항]<br>
 > dto 리팩토링<br>
