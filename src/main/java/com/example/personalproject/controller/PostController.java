@@ -92,18 +92,18 @@ public class PostController {
     }
 
     @GetMapping("/{postId}/comments")
-    public Response<PageImpl<UserCommentResponse>> comment_list(@PathVariable Long postId, @RequestParam(name = "page") Integer page){
-        PageRequest pageRequest = PageRequest.of(page,20,Sort.by("createdAt").descending());
-        List<UserCommentResponse> list = postService.comment_list(postId,pageRequest);
-        return Response.success(new PageImpl<>(list));
+    public Response<Page<UserCommentResponse>> comment_list(@PathVariable Long postId){
+        PageRequest pageRequest = PageRequest.of(0,20,Sort.by("createdAt").descending());
+        Page <UserCommentResponse> list = postService.comment_list(postId,pageRequest);
+        return Response.success(list);
     }
 
     @GetMapping("/my")
-    public Response<PageImpl<UserPostMyResponse>> post_my(@ApiIgnore Authentication authentication){
+    public Response<Page<UserPostMyResponse>> post_my(@ApiIgnore Authentication authentication){
         String name = authentication.getName();
         PageRequest pageRequest = PageRequest.of(0,20,Sort.by("createdAt").descending());
-        List<UserPostMyResponse> list = postService.post_my(name, pageRequest);
-        return Response.success(new PageImpl<>(list));
+        Page<UserPostMyResponse> list = postService.post_my(name, pageRequest);
+        return Response.success(list);
     }
 
 

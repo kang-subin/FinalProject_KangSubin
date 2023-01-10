@@ -223,33 +223,32 @@ public class PostService {
     }
 
 
-    public List<UserCommentResponse> comment_list(Long postId, PageRequest pageRequest){
+    public Page<UserCommentResponse> comment_list(Long postId, PageRequest pageRequest){
         Post post = postRepository.findById(postId).orElseThrow(()-> new UserException(ErrorCode.POST_NOT_FOUND, "해당 포스트가 없습니다."));
         Page<Comment> list = commentRepository.findAll(pageRequest);
 
-        List<UserCommentResponse> commentList = list.map(lists -> UserCommentResponse.builder()
+        Page<UserCommentResponse> commentList = list.map(lists -> UserCommentResponse.builder()
                 .id(lists.getId())
                 .comment(lists.getComment())
                 .userName(lists.getUser().getUserName())
                 .postId(lists.getPost().getId())
                 .createdAt(lists.getCreatedAt())
-                .build())
-                .toList();
+                .build());
 
         return commentList;
     }
 
-    public List<UserPostMyResponse> post_my(String name, PageRequest pageRequest){
+    public Page<UserPostMyResponse> post_my(String name, PageRequest pageRequest){
         User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
         Page<Post> list = postRepository.findByUserId(user.getId(), pageRequest);
 
-        List<UserPostMyResponse> postList = list.map(lists -> UserPostMyResponse.builder()
+        Page<UserPostMyResponse> postList = list.map(lists -> UserPostMyResponse.builder()
                         .id(lists.getId())
                         .title(lists.getTitle())
                         .body(lists.getBody())
                         .userName(lists.getUser().getUserName())
                         .createdAt(lists.getCreatedAt())
-                        .build()).toList();
+                        .build());
 
         return postList;
     }
@@ -290,19 +289,19 @@ public class PostService {
         return new Response("SUCCESS",countLike);
     }
 
-    public List<UserAlarmResponse> alarm(String name, PageRequest pageRequest){
+    public Page<UserAlarmResponse> alarm(String name, PageRequest pageRequest){
 
         User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
         Page<Alarm> list = alarmRepository.findAllByUserId(user.getId(),pageRequest);
 
-        List<UserAlarmResponse> alarmList = list.map (lists-> UserAlarmResponse.builder()
+        Page<UserAlarmResponse> alarmList = list.map (lists-> UserAlarmResponse.builder()
                 .id(lists.getId())
                 .alarmType(lists.getAlarmType())
                 .fromUserId(lists.getFormUserId())
                 .targetId(lists.getTargetId())
                 .text(lists.getText())
                 .createdAt(lists.getCreatedAt())
-                .build()).toList();
+                .build());
 
         return alarmList;
     }
