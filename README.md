@@ -14,10 +14,10 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 - IDE : IntelliJ
 
 ## ERD<br>
-<img src="/uploads/3ee4feca73f2d59582c0a8ae9ac010d5/erd.png" width="600" height="400" />
+<img src="/uploads/3ee4feca73f2d59582c0a8ae9ac010d5/erd.png" width="600" height="600" />
 
 ## Architecture<br>
-<img src="/uploads/fc497eec3de47ac663462dbb7bb79de4/아키텍처.png" width="600" height="200" />
+<img src="/uploads/fc497eec3de47ac663462dbb7bb79de4/아키텍처.png" width="700" height="200" />
 
 
 ## 체크리스트
