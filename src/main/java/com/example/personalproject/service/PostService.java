@@ -293,7 +293,7 @@ public class PostService {
     public List<UserAlarmResponse> alarm(String name, PageRequest pageRequest){
 
         User user = userRepository.findByUserName(name).orElseThrow(()-> new UserException(ErrorCode.USERNAME_NOT_FOUND,"Not founded"));
-        Page<Alarm> list = alarmRepository.findAll(pageRequest);
+        Page<Alarm> list = alarmRepository.findAllByUserId(user.getId(),pageRequest);
 
         List<UserAlarmResponse> alarmList = list.map (lists-> UserAlarmResponse.builder()
                 .id(lists.getId())

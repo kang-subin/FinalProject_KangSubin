@@ -253,10 +253,10 @@ class PostServiceTest {
         User user = new User(1L, "강수빈", "1111"); // post 작성한 user
         Post post = new Post(1L, "제목", "내용", user, null);
 
-        User user2 = new User(1L,"수빈","1111"); // 로그인한 user
-        User user3 = new User(1L,"제리","1111"); // 댓글 작성한 user
+        User user2 = new User(2L, "수빈", "1111"); // 로그인한 user
+        User user3 = new User(1L, "제리", "1111"); // 댓글 작성한 user
 
-        Comment comment = new Comment(1L,"댓글 수정",user3,post);
+        Comment comment = new Comment(1L, "댓글 수정", user3, post);
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(userRepository.findByUserName(name)).thenReturn(Optional.of(user2));
@@ -268,4 +268,50 @@ class PostServiceTest {
 
 
     }
+
+    @Test
+    @DisplayName("댓글 삭제 실패(1) - 유저 존재하지 않음")
+    public void comment_deleteFail1() {
+        Long postId = 1L;
+        Long id = 1L;
+        String name = "강수빈";
+
+        User user = new User(1L, "강수빈", "1111"); // post 작성한 user
+        Post post = new Post(1L, "제목", "내용", user, null);
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+        when(userRepository.findByUserName(name)).thenReturn(Optional.empty());
+
+        UserException exception = Assertions.assertThrows(UserException.class, () -> postService.comment_delete(postId, id, name));
+        assertEquals(ErrorCode.USERNAME_NOT_FOUND, exception.getErrorCode());
+        assertEquals("Not founded", exception.getErrorCode().getMessage());
+
+    }
+
+
+    @Test
+    @DisplayName("댓글 삭제 실패(2) - 댓글 존재하지 않음")
+    public void comment_deleteFail2() {
+        Long postId = 1L;
+        Long id = 1L;
+        String name = "수빈";
+
+        User user = new User(1L, "강수빈", "1111"); // post 작성한 user
+        Post post = new Post(1L, "제목", "내용", user, null);
+        User user2 = new User(2L,"수빈","1111"); // 로그인한 user
+
+
+
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
+        when(userRepository.findByUserName(name)).thenReturn(Optional.of(user2));
+        when(commentRepository.findById(id)).thenReturn(Optional.empty());
+
+        UserException exception = Assertions.assertThrows(UserException.class, () -> postService.comment_delete(postId, id, name));
+        assertEquals(ErrorCode.COMMENT_NOT_FOUND, exception.getErrorCode());
+        assertEquals("해당 댓글이 없습니다.", exception.getErrorCode().getMessage());
+
+
+    }
+
+
 }
