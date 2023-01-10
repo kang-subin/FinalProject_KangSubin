@@ -13,7 +13,12 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 - Deploy : Docker
 - IDE : IntelliJ
 
-## ERD
+## ERD<br>
+<img src="/uploads/3ee4feca73f2d59582c0a8ae9ac010d5/erd.png" width="200" height="200" />
+
+## Architecture<br>
+<img src="/uploads/fc497eec3de47ac663462dbb7bb79de4/아키텍처.png" width="200" height="100" />
+
 
 ## 체크리스트
 1. -[x] Gitlab CI & Crontab CD 구현
@@ -25,6 +30,14 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 7. -[x] 포스트 상세조회 / 삭제 테스트 코드 작성
 8. -[x] 포스트 목록 / 수정 API 구현
 9. -[x] 포스트 목록 / 수정 테스트 코드 작성
+10. -[x] 댓글 작성, 목록 API 구현
+11. -[x] 댓글 수정 / 삭제 API 구현
+12. -[x] 좋아요 누르기, 조회 API 구현
+13. -[x] 마이피드, 알람 API 구현
+14. -[x] 댓글 작성, 목록, 수정, 삭제 테스트 코드 작성
+15. -[x] 좋아요, 마이피드, 알람 테스트 코드 작성
+
+
 
 ## 상세설명
 1. Gitlab CI & Crontab CD 구현
@@ -36,7 +49,7 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 4. 인증 / 인가 필터 구현
 > SpringSecurity, Jwt 활용 포스트 (작성, 수정, 삭제) 시 인증, 인가 필요
 5. 포스트 작성 API 구현 / 테스트 코드 작성
-> Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
+> [EndPoints] POST /api/v1/posts , Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
 6. 포스트 상세조회 / 삭제 API 구현
 >[EndPoints] GET /api/v1/posts/{postId} , DELETE /api/v1/posts/{id}<br>
 7. 포스트 상세조회 / 삭제 테스트 코드 작성
@@ -45,13 +58,26 @@ http://ec2-3-37-127-211.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/
 >[EndPoints] GET /api/v1/posts , PUT /api/v1/posts/{id}<br>
 9. 포스트 목록 / 수정 테스트 코드 작성
 > Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
-
+10. 댓글 작성, 목록 API 구현
+>[EndPoints] POST /api/v1/posts/{postId}/comments , GET /api/v1/posts/{postId}/comments
+11. 댓글 수정 / 삭제 API 구현
+>[EndPoints] PUT /api/v1/posts/{postId}/comments/{id} , DELETE /api/v1/posts/{postId}/comments/{id}  
+12. 좋아요 누르기, 조회 API 구현
+>[EndPoints] POST /api/v1/posts/{postId}/likes ,  GET /api/v1/posts/{postId}/likes
+13. 마이피드, 알람 API 구현
+>[EndPoints] GET /api/v1/posts/my , GET /api/v1/alarms
+14. 댓글 작성, 목록, 수정, 삭제 테스트 코드 작성
+> Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현
+15. 좋아요, 마이피드, 알람 테스트 코드 작성 
+> Junit, Mockito 활용, PostControllerTest, PostServiceTest 구현, AlarmsControllerTest 구현
 
 ## Review
 > [개선 필요사항]<br>
 > dto 리팩토링<br>
 > JwtFilter Exception 구현 <br>
 > UserRole 구현
+> 테스트 코드 중복되는 코드 리팩토링 필요
+> Page 기능 검증을 위한 테스트 코드 작성 필요
 
 
 
